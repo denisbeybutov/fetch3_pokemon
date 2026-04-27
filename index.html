@@ -11,11 +11,16 @@
     <title>Pokemons</title>
 </head>
 <body>
-    <p>Покемоны 12</p>
-    <label for="input__pokemon">Введите номер покемона (от 1 до 1025)</label>
-    <input id="input__pokemon" type="text"> <br>
+    <p>Покемоны</p>
+    <p><label for="input__pokemon">Введите номер покемона (от 1 до 1025)</label></p>    
+    <p>
+        <input id="input__pokemon" type="number">
+        <button>Найти</button>
+    </p>
     <img class="picture" src="" alt="">
     <p class="description__pokemon"></p>
+
+
     <script>
         async function getPokemon(pokemonId) {
             const pokemonHeaders = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
@@ -23,24 +28,27 @@
             return pokemon;
         }
 
-        document.querySelector('#input__pokemon').addEventListener('change', function(event){
+        document.querySelector('#input__pokemon').addEventListener('change', function(event){            
             pokemonId = +event.target.value;
-            // console.log(pokemonId);
-            getPokemon(pokemonId).then((pokemon)=> {
-                // console.log(pokemon);
+            if(pokemonId < 1 || pokemonId > 1025) {
+                document.querySelector('.picture').src = '';
+                document.querySelector('.description__pokemon'). innerHTML = 'Ошибка загрузки покемона. Введите верное число.'
+                return;
+            }
+            
+            getPokemon(pokemonId).then((pokemon)=> {                
                 document.querySelector('.picture').src = pokemon.sprites.front_default;
-                document.querySelector('.description__pokemon').innerHTML = `Имя: ${pokemon.name}`;
+                document.querySelector('.description__pokemon').innerHTML = `
+                    Имя: ${pokemon.name} <br>
+                    Рост: ${pokemon.height/10} м <br>
+                    Вес: ${pokemon.weight/10} кг <br>
+                    Типы: ${pokemon.types.map(item=>item.type.name).join(', ')}
+                    `;
             });
 
         })
 
-        // getPokemon(25).then(console.log);
-
-        // a(25).then((pokemon)=>{
-        //     console.log('Pokemon',pokemon, pokemon.sprites.front_default);
-        //     document.querySelector('.picture').src = pokemon.sprites.front_default;
-        // });
-        
+       
     </script>
 </body>
 </html>
