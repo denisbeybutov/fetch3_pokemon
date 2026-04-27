@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background-color: grey;
+        }
+    </style>
+    <title>Pokemons</title>
+</head>
+<body>
+    <p>Покемоны</p>
+    <label for="input__pokemon">Введите номер покемона (от 1 до 1025)</label>
+    <input id="input__pokemon" type="text"> <br>
+    <img class="picture" src="" alt="">
+    <p class="description__pokemon"></p>
+    <script>
+        async function getPokemon(pokemonId) {
+            const pokemonHeaders = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
+            const pokemon = await pokemonHeaders.json();            
+            return pokemon;
+        }
+
+        document.querySelector('#input__pokemon').addEventListener('change', function(event){
+            pokemonId = +event.target.value;
+            // console.log(pokemonId);
+            getPokemon(pokemonId).then((pokemon)=> {
+                // console.log(pokemon);
+                document.querySelector('.picture').src = pokemon.sprites.front_default;
+                document.querySelector('.description__pokemon').innerHTML = `Имя: ${pokemon.name}`;
+            });
+
+        })
+
+        // getPokemon(25).then(console.log);
+
+        // a(25).then((pokemon)=>{
+        //     console.log('Pokemon',pokemon, pokemon.sprites.front_default);
+        //     document.querySelector('.picture').src = pokemon.sprites.front_default;
+        // });
+        
+    </script>
+</body>
+</html>
